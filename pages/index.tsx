@@ -1,85 +1,69 @@
+import axios from 'axios'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
-
+import { useEffect, useState } from 'react'
+import CategoryComponent from '../components/category'
+import { Category } from '../interfaces/interfaces'
+import CreateCategoryModal from '../components/CreateCategoryModal'
 const Home: NextPage = () => {
+  const [categories, setCategories] = useState<Array<Category>>([])
+  const [showingCreateModal, setShowingCreateModal] = useState<boolean>(false)
+
+  const reloadCategories = async () => {
+    const categories = await axios.get<Array<Category>>('/api/categories')
+    setCategories(categories.data)
+  }
+
+  useEffect(() => {
+    reloadCategories()
+  }, [])
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
+    <>
       <Head>
-        <title>Create Next App</title>
+        <title>Jos sistemul de invatamant</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      {showingCreateModal && (
+        <CreateCategoryModal
+          handleModal={setShowingCreateModal}
+          reloadCategories={reloadCategories}
+        ></CreateCategoryModal>
+      )}
+      <div
+        onClick={() => setShowingCreateModal(true)}
+        className="fixed right-4 bottom-4 grid cursor-pointer place-items-center rounded-full bg-blue-600 p-2 text-xs"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="32px"
+          width="32px"
+          viewBox="0 0 24 24"
+          fill="#fff"
+        >
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+        </svg>
+      </div>
+      <main className="flex w-full flex-1 flex-col items-center justify-center px-2 text-center sm:px-20">
+        <h1 className="text-4xl font-bold md:text-6xl">Sistem de copiere</h1>
 
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
+        <p className="mt-3 text-2xl">Categorii</p>
 
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="rounded-md bg-gray-100 p-3 font-mono text-lg">
-            pages/index.tsx
-          </code>
-        </p>
-
-        <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        <div className="mt-6 grid max-w-4xl grid-cols-1 gap-4 sm:w-full md:grid-cols-2">
+          {categories.map((category) => {
+            return (
+              <CategoryComponent
+                id={category.id}
+                key={category.id}
+                name={category.name}
+                description={category.description}
+              />
+            )
+          })}
         </div>
       </main>
-
-      <footer className="flex h-24 w-full items-center justify-center border-t">
-        <a
-          className="flex items-center justify-center gap-2"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-        </a>
-      </footer>
-    </div>
+    </>
   )
 }
 
