@@ -17,7 +17,7 @@ export default async function handleCategory(
     })
   }else if(req.method === "GET"){
     const db = await sqlite.open({filename:'./database.db' , driver:sqlite3.Database});
-    const people = await db.all("SELECT * FROM Category;");
-    res.json(people)
+    const categories = await db.all("SELECT * FROM Category;");
+    res.json(categories)
   }
 }

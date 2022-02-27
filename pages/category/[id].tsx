@@ -5,11 +5,21 @@ import LessonComponent from '../../components/lesson'
 import NewLessonComponent from '../../components/NewLesson'
 import { Category, Lesson } from '../../interfaces/interfaces'
 
+// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+const sqlite = require('sqlite')
+const sqlite3 = require('sqlite3')
+
 export const getStaticPaths: GetStaticPaths = async () => {
-  const response = await axios.get<Array<Category>>(
-    'http://localhost:3000/api/categories'
-  )
-  const paths = response.data.map((category) => {
+  const db = await sqlite.open({
+    filename: './database.db',
+    driver: sqlite3.Database,
+  })
+  const categories = await db.all('SELECT * FROM Category;')
+
+  // const response = await axios.get<Array<Category>>(
+  //   'http://localhost:3000/api/categories'
+  // )
+  const paths = categories.map((category: any) => {
     return {
       params: { id: category.id.toString() },
     }
@@ -33,7 +43,6 @@ const CategoryPage: any = ({ id }: any) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [category, setCategory] = useState<Category>()
   const [lessons, setLessons] = useState<Array<Lesson>>([])
-  const [markdown, setMarkdown] = useState()
 
   const reloadLectii = async () => {
     setLoading(true)
