@@ -23,7 +23,6 @@ export default function CreateCategoryModal({
     handleModal(false)
   }
 
-  console.log(categoryName)
   return (
     <>
       <ClientOnlyPortal selector="#modal">

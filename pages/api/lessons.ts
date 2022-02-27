@@ -62,7 +62,7 @@ export default async function handleLesson(
           request_json['markdown'],
           request_json['categoryId']
         )
-        console.log('here')
+
         res.status(201).json({
           succes: true,
         })

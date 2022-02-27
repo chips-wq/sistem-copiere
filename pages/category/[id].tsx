@@ -30,7 +30,6 @@ export const getStaticProps: GetStaticProps = async (context: any) => {
 }
 
 const CategoryPage: any = ({ id }: any) => {
-  console.log(id)
   const [loading, setLoading] = useState<boolean>(false)
   const [category, setCategory] = useState<Category>()
   const [lessons, setLessons] = useState<Array<Lesson>>([])

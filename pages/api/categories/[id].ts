@@ -9,7 +9,6 @@ export default async function getCategory(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log("getcategory")
   const db = await sqlite.open({
     filename: './database.db',
     driver: sqlite3.Database,

@@ -33,7 +33,6 @@ export default async function getLesson(
       }
       if(result.data){
         const [title , paragraph] = result.data;
-        console.log(req.body['markdown'])
         await db.run("UPDATE Lesson SET title = ?, description = ? , markdown = ? WHERE id = ? ;" ,title , paragraph , req.body['markdown'], req.query.id)
         res.json({success:true})
       }

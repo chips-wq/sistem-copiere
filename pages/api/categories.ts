@@ -7,7 +7,6 @@ export default async function handleCategory(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log("alive")
   if (req.method === "POST"){
     const db = await sqlite.open({filename:'./database.db' , driver:sqlite3.Database});
     const request_json = req.body
@@ -17,9 +16,7 @@ export default async function handleCategory(
       "succes":true
     })
   }else if(req.method === "GET"){
-    console.log("going")
     const db = await sqlite.open({filename:'./database.db' , driver:sqlite3.Database});
-    console.log("on")
     const people = await db.all("SELECT * FROM Category;");
     res.json(people)
   }
